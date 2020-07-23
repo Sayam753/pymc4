@@ -292,13 +292,61 @@ class BoundedDiscreteDistribution(DiscreteDistribution, BoundedDistribution):
         return tf.cast(tf.round(0.5 * (self.upper_limit() + self.lower_limit())), self.dtype)
 
 
+class LowerBoundedDiscreteDistribution(BoundedDiscreteDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.LowerBound(self.lower_limit())
+        else:
+            return transform
+
+
+class UpperBoundedDiscreteDistribution(BoundedDiscreteDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.UpperBound(self.upper_limit())
+        else:
+            return transform
+
+
+class IntervalBoundedDiscreteDistribution(BoundedDiscreteDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.Interval(self.lower_limit(), self.upper_limit())
+        else:
+            return transform
+
+
 class BoundedContinuousDistribution(ContinuousDistribution, BoundedDistribution):
     @property
     def _test_value(self):
         return 0.5 * (self.upper_limit() + self.lower_limit())
 
 
-class UnitContinuousDistribution(BoundedContinuousDistribution):
+class LowerBoundedContinuousDistribution(BoundedContinuousDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.LowerBound(self.lower_limit())
+        else:
+            return transform
+
+
+class UpperBoundedContinuousDistribution(BoundedContinuousDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.UpperBound(self.upper_limit())
+        else:
+            return transform
+
+
+class IntervalBoundedContinuousDistribution(BoundedContinuousDistribution):
+    def _init_transform(self, transform):
+        if transform is None:
+            return transforms.Interval(self.lower_limit(), self.upper_limit())
+        else:
+            return transform
+
+
+class UnitContinuousDistribution(IntervalBoundedContinuousDistribution):
     def _init_transform(self, transform):
         if transform is None:
             return transforms.Sigmoid()
@@ -312,7 +360,7 @@ class UnitContinuousDistribution(BoundedContinuousDistribution):
         return 1.0
 
 
-class PositiveContinuousDistribution(BoundedContinuousDistribution):
+class PositiveContinuousDistribution(LowerBoundedContinuousDistribution):
     _test_value = 1.0
 
     def _init_transform(self, transform):
@@ -328,11 +376,11 @@ class PositiveContinuousDistribution(BoundedContinuousDistribution):
         return float("inf")
 
 
-class PositiveDiscreteDistribution(BoundedDiscreteDistribution):
+class PositiveDiscreteDistribution(LowerBoundedDiscreteDistribution):
     _test_value = 1
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
         return float("inf")

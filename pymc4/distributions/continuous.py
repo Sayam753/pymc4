@@ -10,7 +10,8 @@ from pymc4.distributions.distribution import (
     ContinuousDistribution,
     PositiveContinuousDistribution,
     UnitContinuousDistribution,
-    BoundedContinuousDistribution,
+    LowerBoundedContinuousDistribution,
+    IntervalBoundedContinuousDistribution,
 )
 from .half_student_t import HalfStudentT as TFPHalfStudentT
 
@@ -1036,7 +1037,7 @@ class Moyal(ContinuousDistribution):
         return self._distribution.bijector.validate_args
 
 
-class Pareto(BoundedContinuousDistribution):
+class Pareto(LowerBoundedContinuousDistribution):
     r"""Pareto random variable.
 
     Often used to characterize wealth distribution, or other examples of the
@@ -1167,7 +1168,7 @@ class StudentT(ContinuousDistribution):
         return tfd.StudentT(df=df, loc=loc, scale=scale, **kwargs)
 
 
-class Triangular(BoundedContinuousDistribution):
+class Triangular(IntervalBoundedContinuousDistribution):
     r"""Continuous Triangular random variable.
 
     The pdf of this distribution is
@@ -1235,7 +1236,7 @@ class Triangular(BoundedContinuousDistribution):
         return self._distribution.high
 
 
-class Uniform(BoundedContinuousDistribution):
+class Uniform(IntervalBoundedContinuousDistribution):
     r"""Continuous uniform random variable.
 
     The pdf of this distribution is
@@ -1381,7 +1382,7 @@ class HalfFlat(PositiveContinuousDistribution):
         raise TypeError("cannot sample from a half flat distribution")
 
 
-class VonMises(BoundedContinuousDistribution):
+class VonMises(IntervalBoundedContinuousDistribution):
     r"""Univariate VonMises random variable.
 
     The pdf of this distribution is

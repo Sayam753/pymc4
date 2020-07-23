@@ -3,7 +3,8 @@ import tensorflow as tf
 from tensorflow_probability import distributions as tfd
 from pymc4.distributions.distribution import (
     PositiveDiscreteDistribution,
-    BoundedDiscreteDistribution,
+    IntervalBoundedDiscreteDistribution,
+    LowerBoundedDiscreteDistribution,
 )
 
 __all__ = [
@@ -20,7 +21,7 @@ __all__ = [
 ]
 
 
-class Bernoulli(BoundedDiscreteDistribution):
+class Bernoulli(IntervalBoundedDiscreteDistribution):
     r"""Bernoulli random variable.
 
     The Bernoulli distribution describes the probability of successes
@@ -67,13 +68,13 @@ class Bernoulli(BoundedDiscreteDistribution):
         return tfd.Bernoulli(probs=probs, **kwargs)
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
-        return 1
+        return 1.
 
 
-class Binomial(BoundedDiscreteDistribution):
+class Binomial(IntervalBoundedDiscreteDistribution):
     r"""Binomial random variable.
 
     The discrete probability distribution of the number of successes
@@ -124,13 +125,13 @@ class Binomial(BoundedDiscreteDistribution):
         return tfd.Binomial(total_count=total_count, probs=probs, **kwargs)
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
         return self._distribution.total_count
 
 
-class BetaBinomial(BoundedDiscreteDistribution):
+class BetaBinomial(IntervalBoundedDiscreteDistribution):
     r"""Bounded Discrete compound Beta-Binomial Random Variable.
 
     The pmf of this distribution is
@@ -200,13 +201,13 @@ class BetaBinomial(BoundedDiscreteDistribution):
         )
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
         return self._distribution.total_count
 
 
-class DiscreteUniform(BoundedDiscreteDistribution):
+class DiscreteUniform(IntervalBoundedDiscreteDistribution):
     r"""Discrete uniform random variable.
 
     The pmf of this distribution is
@@ -263,7 +264,7 @@ class DiscreteUniform(BoundedDiscreteDistribution):
         return self._distribution.outcomes[-1].numpy()
 
 
-class Categorical(BoundedDiscreteDistribution):
+class Categorical(IntervalBoundedDiscreteDistribution):
     r"""Categorical random variable.
 
     The most general discrete distribution. The pmf of this distribution is
@@ -306,13 +307,13 @@ class Categorical(BoundedDiscreteDistribution):
         return tfd.FiniteDiscrete(outcomes, probs=probs, **kwargs)
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
         return len(self._distribution.probs)
 
 
-class Geometric(BoundedDiscreteDistribution):
+class Geometric(LowerBoundedDiscreteDistribution):
     r"""
     Geometric random variable.
 
@@ -362,7 +363,7 @@ class Geometric(BoundedDiscreteDistribution):
         return tfd.Geometric(probs=probs, **kwargs)
 
     def lower_limit(self):
-        return 1
+        return 1.
 
     def upper_limit(self):
         return float("inf")
@@ -723,7 +724,7 @@ class Zipf(PositiveDiscreteDistribution):
         return tfd.Zipf(power=power, **kwargs)
 
 
-class OrderedLogistic(BoundedDiscreteDistribution):
+class OrderedLogistic(IntervalBoundedDiscreteDistribution):
     r"""Ordinal logistic random variable.
 
     An ordered discrete random variable. The OrderedLogistic
@@ -760,7 +761,7 @@ class OrderedLogistic(BoundedDiscreteDistribution):
         return tfd.OrderedLogistic(cutpoints=cutpoints, loc=loc, **kwargs)
 
     def lower_limit(self):
-        return 0
+        return 0.
 
     def upper_limit(self):
         return len(self._distribution.cutpoints)
