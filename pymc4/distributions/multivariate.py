@@ -109,7 +109,9 @@ class LKJ(ContinuousDistribution):
 
     @property
     def test_value(self):
-        return tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1]))
+        return tf.cast(
+            tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1])), self.dtype
+        )
 
 
 class Multinomial(DiscreteDistribution):
@@ -281,7 +283,9 @@ class Wishart(ContinuousDistribution):
 
     @property
     def test_value(self):
-        return tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1]))
+        return tf.cast(
+            tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1])), self.dtype
+        )
 
 
 class LKJCholesky(ContinuousDistribution):
@@ -322,7 +326,9 @@ class LKJCholesky(ContinuousDistribution):
 
     @property
     def test_value(self):
-        return tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1]))
+        return tf.cast(
+            tf.linalg.diag(tf.ones((self.batch_shape + self.event_shape)[:-1])), self.dtype
+        )
 
 
 class MvNormalCholesky(ContinuousDistribution):
