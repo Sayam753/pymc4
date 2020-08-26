@@ -5,6 +5,7 @@ Implements random variables not supported by tfp as distributions.
 """
 import tensorflow as tf
 from tensorflow_probability import distributions as tfd
+from tensorflow_probability import bijectors as tfb
 from pymc4.distributions.distribution import (
     SimplexContinuousDistribution,
     DiscreteDistribution,
@@ -315,6 +316,11 @@ class LKJCholesky(ContinuousDistribution):
         extended onion method." Journal of multivariate analysis,
         100(9), pp.1989-2001.
     """
+    def _init_transform(self, transform):
+        if transform is None:
+            return tfb.CorrelationCholesky()
+        else:
+            return transform
 
     def __init__(self, name, dimension, concentration, **kwargs):
         super().__init__(name, dimension=dimension, concentration=concentration, **kwargs)
